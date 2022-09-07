@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+
+[Unit]
+Description=The foosched service
+ConditionKernelCommandLine=!foosched.enable=0
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/bash -c "\
+	if [ -d /var/foosched/$(uname -r) ]; then \
+		/var/foosched/$(uname -r)/scheduler-installer install; \
+	else \
+		echo \"Scheduler for the current kernel version is not installed. Start service failed!\"; \
+		exit 1; \
+	fi"
+
+[Install]
+WantedBy=multi-user.target

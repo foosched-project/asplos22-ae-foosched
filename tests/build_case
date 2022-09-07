@@ -1,0 +1,13 @@
+#!/bin/bash
+# SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+
+source $(dirname "$0")/libs/working_dir
+source libs/catch_error
+
+podman cp $1/patch.diff foosched:/root/patch
+podman exec -it foosched patch -f -p1 -i patch
+podman exec -it foosched foosched-cli build scheduler
+podman exec -it foosched patch -f -p1 -i patch -R
+podman exec -it foosched ls /usr/local/lib/foosched/rpmbuild/RPMS/$(uname -i)/
+podman exec -it foosched bash -c "cp /usr/local/lib/foosched/rpmbuild/RPMS/$(uname -i)/scheduler-xxx-*.rpm /root"
+

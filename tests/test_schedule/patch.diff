@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+
+diff --git a/scheduler/kernel/sched/mod/core.c b/scheduler/kernel/sched/mod/core.c
+index 9f16b72..21262fd 100644
+--- a/scheduler/kernel/sched/mod/core.c
++++ b/scheduler/kernel/sched/mod/core.c
+@@ -3248,6 +3248,10 @@ static void __sched notrace __schedule(bool preempt)
+ 	struct rq_flags rf;
+ 	struct rq *rq;
+ 	int cpu;
++	char buf[128];
++
++	sprintf(buf, "%s", "I am the new scheduler: __schedule\n");
++	printk_once(buf);
+ 
+ 	cpu = smp_processor_id();
+ 	rq = cpu_rq(cpu);

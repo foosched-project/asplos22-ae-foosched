@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+From openanolis/anolisos:8.6-x86_64
+
+RUN yum install python3 python3-devel python3-lxml gcc gcc-c++ wget libyaml-devel -y && \
+    yum install python3-pip python3-Cython -y
+RUN pip3 install --upgrade setuptools && \
+    pip3 install pyyaml && \
+    pip3 install sh coloredlogs fire jinja2 docopt && \
+    yum install make bison flex python3-lxml python3-six python3-pygments \
+                gcc-plugin-devel.x86_64 \
+                systemd git \
+                elfutils-libelf-devel.x86_64 openssl openssl-devel \
+                elfutils-devel-static \
+                glibc-static zlib-static \
+                libstdc++-static \
+                platform-python-devel \
+                rpm-build rsync bc perl -y && \
+    yum install gcc-python-plugin --enablerepo=Plus -y && \
+    yum clean all
+
+COPY . /usr/local/lib/foosched/
+RUN ln -s /usr/local/lib/foosched/cli.py /usr/local/bin/foosched-cli

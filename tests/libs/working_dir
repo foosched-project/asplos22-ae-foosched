@@ -1,0 +1,6 @@
+#!/bin/bash
+# SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+
+TEST_PATH=$(realpath $(dirname "$0"))
+cd ${TEST_PATH}
+export PATH=$PATH:${TEST_PATH}

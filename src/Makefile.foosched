@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+
+include Makefile
+
+GCC_PLUGIN_FLAGS := -fplugin=/usr/lib64/gcc-python-plugin/python.so \
+		    -fplugin-arg-python-script=$(foosched_tmpdir)/collect.py \
+		    -fplugin-arg-python-tmpdir=$(foosched_tmpdir) \
+		    -fplugin-arg-python-modpath=$(foosched_modpath)
+
+PHONY += foosched collect extract
+
+foosched: scripts prepare
+	$(MAKE) -C $(srctree) M=$(foosched_modpath) modules
+
+collect: modules_prepare
+	$(MAKE) CFLAGS_KERNEL="$(GCC_PLUGIN_FLAGS)" \
+		CFLAGS_MODULE="$(GCC_PLUGIN_FLAGS)" $(vmlinux-dirs)
+analyze:
+	python3 $(foosched_tmpdir)/analyze.py ./vmlinux $(foosched_tmpdir) $(foosched_modpath)
+
+extract: $(objs)
+
+%.extract: %
+	python3 $(foosched_tmpdir)/extract.py $^ $(foosched_tmpdir) $(foosched_modpath)
